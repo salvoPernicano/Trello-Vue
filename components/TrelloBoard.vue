@@ -43,21 +43,17 @@ const columns = ref<Column[]>([
 </script>
 
 <template>
-    <div>
-        <div v-for="column in columns" :key="column.id">
-            <h1>
+    <div class="flex gap-4 overflow-x-auto items-start">
+        <div class="bg-gray-300 column p-5 rounded min-w-[250px] text-center" v-for="column in columns" :key="column.id">
+            <h1 class="font-bold mb-4">
                 {{ column.title }}
             </h1>
-            <ul>
-                <li v-for="task in column.tasks" :key="task.id">
-                    <h3>
-                        {{ task.title }}
-                    </h3>
-                    <span>
-                        {{ task.createdAt }}
-                    </span>
-                </li>
-            </ul>
+           <TrelloBoardTask v-for="task in column.tasks" 
+           :key="task.id" 
+           :task="task" />
+           <footer>
+            <button class="text-gray-500">+ Add a Card</button>
+           </footer>
         </div>
     </div>
 </template>
