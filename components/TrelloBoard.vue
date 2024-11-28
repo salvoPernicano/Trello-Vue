@@ -41,6 +41,7 @@ const columns = ref<Column[]>([
     },
 
 ]);
+const alt = useKeyModifier('Alt');
 </script>
 
 <template>
@@ -51,29 +52,34 @@ const columns = ref<Column[]>([
         item-key="id" 
         :animation="150" 
         handle=".drag-handle"
-        class="flex gap-4 overflow-x-auto items-start">
+        class="flex gap-4 overflow-x-auto items-start p-2">
             
         <template #item="{ element: column }: { element: Column }">
                 <div class="bg-gray-300 column p-5 rounded min-w-[250px] text-center">
-                    <h1 class="font-bold mb-4">
+                    <h1 class="font-bold mb-5 p-2">
                         <DragHandle />
                         {{ column.title }}
                     </h1>
 
                 <draggable 
                 v-model="column.tasks" 
-                group="tasks" 
+                :group="{
+                name : 'tasks',
+                pull : alt ? 'clone' : true
+                }" 
                 item-key="id" 
                 handle=".drag-handle"
                 :animation="150" 
                 
-                class="flex-col overflow-x-auto items-start">
+                class="overflow-x-auto ">
                         <template #item="{ element: task } : { element: Task }">
-                            <TrelloBoardTask :task="task" />
+                            <div>
+                                <TrelloBoardTask :task="task" @delete="column.tasks = column.tasks.filter((e) => e.id !== $event)"/>
+                            </div>
                         </template>
                     </draggable>
                     <footer>
-                        <button class="text-gray-500">+ Add a Card</button>
+              <NewTask @add="column.tasks.push($event)"/>
                     </footer>
                 </div>
 
